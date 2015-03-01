@@ -7,6 +7,7 @@ function addThermometer(){
     // TODO: validate the input
     var json = '{';
     json +=  '"pin": "' + document.getElementById("pin").value;
+    json +=  '", "name": "' + document.getElementById("name").value;
     json +=  '", "r_0": "' + document.getElementById("r-zero").value;
     json +=  '", "t_0": "' + document.getElementById("t-zero").value;
     json +=  '", "b": "' + document.getElementById("b-value").value;
@@ -30,14 +31,14 @@ socket.on('temperatures', function(temperatures) {
 	if (document.getElementById(temperatures[t].id)){
 	    var tr = document.getElementById(temperatures[t].id);
 	    var tds = tr.childNodes;
-            tds[0].innerHTML = temperatures[t].id
+            tds[0].innerHTML = temperatures[t].name
             tds[1].innerHTML = temperatures[t].temperature
         } else {
             var tr = document.createElement('TR');
 	    tr.setAttribute("id", temperatures[t].id);				
 
             var td = document.createElement('TD');
-            td.appendChild(document.createTextNode(temperatures[t].id));
+            td.appendChild(document.createTextNode(temperatures[t].name));
             tr.appendChild(td);
 	    
             var td = document.createElement('TD');

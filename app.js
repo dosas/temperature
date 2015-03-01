@@ -10,7 +10,8 @@ app.get('/', function(req, res){
 var u_tot = 3.3;
 var u_ref = 1.8;
 
-function Thermometer (pin, t_0, r_0, b, r_ref) {
+function Thermometer (name, pin, t_0, r_0, b, r_ref) {
+    this.name = name
     this.pin = pin;
     this.t_0 = t_0;
     this.r_0 = r_0;
@@ -41,12 +42,13 @@ Thermometer.prototype = {
 
 function handleAddThermometer(data) {
     var values = JSON.parse(data);   
+    console.log("name: " + values.name);
     console.log("pin: " + values.pin);
     console.log("t_0: " + values.t_0);
     console.log("r_0: " + values.r_0);
     console.log("b: " + values.b);
     console.log("r_ref: " + values.r_ref);
-    thermometers.push(new Thermometer(values.pin, parseInt(values.t_0), parseInt(values.b), parseInt(values.r_0), parseInt(values.r_ref)));
+    thermometers.push(new Thermometer(values.name, values.pin, parseInt(values.t_0), parseInt(values.b), parseInt(values.r_0), parseInt(values.r_ref)));
 }
 
 function handleRemoveThermometer(data) {
@@ -64,7 +66,7 @@ function handleRemoveThermometer(data) {
 
 // just add new thermometers below
 var thermometers = [];
-thermometers.push(new Thermometer('P9_40', 298, 4092, 100000, 100000));
+thermometers.push(new Thermometer('default', 'P9_40', 298, 4092, 100000, 100000));
 
 io.on('connection', function (socket) {
 
@@ -72,7 +74,7 @@ io.on('connection', function (socket) {
 	console.log(thermometers.length)
 	var temperatures = [];
 	for (var t = 0; t < thermometers.length; ++t) {
-            temperatures.push({'id' : thermometers[t].pin, 'temperature': thermometers[t].temperature()});
+            temperatures.push({'id' : thermometers[t].pin, 'temperature': thermometers[t].temperature(), 'name': thermometers[t].name});
 	    //console.log(thermometers[t].pin + ": " + thermometers[t].temperature());
 	}
         io.emit('temperatures', temperatures);
