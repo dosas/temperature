@@ -1,0 +1,11 @@
+{
+    "name": "App",
+    "version": "0.0.1",
+    "description": "App",
+    "dependencies": {
+        "socket.io": "latest",
+	"bonescript": "latest",
+	"express": "latest"
+    },
+    "author": "developer"
+}

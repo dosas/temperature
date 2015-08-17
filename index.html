@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="static/index.css">
+
+    <title>Temperature Measurement</title>
+    <script src = "/socket.io/socket.io.js" ></script>
+    <script>
+        // Establishing connection with server
+        var socket = io.connect();
+
+        // Changes the led state
+        function changeState(state){
+            if (state==1){
+                // Emit message changing the state to 1
+                socket.emit('changeState', '{"state":1}');
+                // Change led status on web page to ON
+                document.getElementById("outputStatus").innerHTML = "Status: ON";
+            }
+            else if (state==0){
+                // Emit message changing the state to 0
+                socket.emit('changeState', '{"state":0}');
+                // Change led status on web page to OFF
+                document.getElementById("outputStatus").innerHTML = "Status: OFF";
+            }
+        }
+
+	socket.on('temperature', function(data) {
+	      document.getElementById("temp").innerHTML = data.temperature;
+	});
+
+    </script>
+</head>
+  <h2>Temperature</h2>
+  <p id="temp">0</p>
+  <h2>Switch</h2>
+    <p id="outputStatus">Status</p>
+    <button type="button" onclick="changeState(1);">ON</button>
+    <button type="button" onclick="changeState(0);">OFF</button>
+</div>
+</body>
+</html>
+
