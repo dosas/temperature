@@ -1,0 +1,43 @@
+#!/bin/sh
+
+### BEGIN INIT INFO
+# Provides:          forever
+# Required-Start:    $all
+# Required-Stop:     
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Start forever a node.js deamon on startup
+# Description:       Start forever a node.js deamon on startup
+### END INIT INFO
+
+# ------------------------------------------------------
+# adapted after http://www.slidequest.com/Taboca/70ang
+# 'install'
+# cp forever /etc/init.d/forever
+# chmod 755 /etc/init.d/forever
+# update-rc.d forever defaults
+# update-rc.d forever enable
+# -----------------------------------------------------
+
+SCRIPT_NAME=app.js
+SOURCE_DIR=/var/www/temperature
+FOREVER_BIN=$SOURCE_DIR/node_modules/.bin/forever
+LOG_PID_DIR=/var/log/forever
+
+case "$1" in
+    start)
+	exec $FOREVER_BIN --sourceDir=$SOURCE_DIR -p $LOG_PID_DIR start $SCRIPT_NAME
+	;;
+    stop)
+	exec $FOREVER_BIN stop --sourceDir=$SOURCE_DIR $SCRIPT_NAME
+	;;
+    status)
+	exec $FOREVER_BIN list --sourceDir=$SOURCE_DIR
+	;;
+    *)
+	echo "Usage: /etc/init.d/forever {start|stop|status}"
+	exit 1
+	;;
+esac
+
+exit 0

@@ -5,7 +5,8 @@
     "dependencies": {
         "socket.io": "latest",
 	"bonescript": "latest",
-	"express": "latest"
+	"express": "latest",
+	"forever": "latest"
     },
     "author": "developer"
 }
