@@ -39,7 +39,6 @@ Thermometer.prototype = {
     }
 }
 
-// TODO be able to remove them
 function handleAddThermometer(data) {
     var values = JSON.parse(data);   
     console.log("pin: " + values.pin);
@@ -48,6 +47,19 @@ function handleAddThermometer(data) {
     console.log("b: " + values.b);
     console.log("r_ref: " + values.r_ref);
     thermometers.push(new Thermometer(values.pin, parseInt(values.t_0), parseInt(values.b), parseInt(values.r_0), parseInt(values.r_ref)));
+}
+
+function handleRemoveThermometer(data) {
+    var values = JSON.parse(data);   
+    var index;
+    for (var t = 0; t < thermometers.length; ++t) {
+	if (thermometers[t].pin == values.id){
+	    index = t;
+	}
+    }
+    if (index) {
+	thermometers.splice(index, 1);
+    }
 }
 
 // just add new thermometers below
@@ -67,6 +79,7 @@ io.on('connection', function (socket) {
     }, 1000);
 
     socket.on('addThermometer', handleAddThermometer);
+    socket.on('removeThermometer', handleRemoveThermometer);
 
 });
 

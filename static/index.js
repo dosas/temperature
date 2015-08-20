@@ -15,6 +15,12 @@ function addThermometer(){
     socket.emit('addThermometer', json);
 }
 
+function removeThermometer(id){
+    socket.emit('removeThermometer', '{"id": "'+ id + '"}');
+    // not pretty but works should be done via callback
+    document.getElementById(id).remove();    
+}
+
 socket.on('temperatures', function(temperatures) {
 
     var table = document.getElementById("table-temperature");
@@ -36,6 +42,15 @@ socket.on('temperatures', function(temperatures) {
 	    
             var td = document.createElement('TD');
 	    td.appendChild(document.createTextNode(temperatures[t].temperature));
+            tr.appendChild(td);
+
+	    var element = document.createElement("input");
+	    element.type = "submit";
+	    element.value = "del"
+	    element.setAttribute("onclick", "removeThermometer('" + temperatures[t].id + "')");
+
+            var td = document.createElement('TD');
+	    td.appendChild(element);
             tr.appendChild(td);
 
             table.appendChild(tr);         
