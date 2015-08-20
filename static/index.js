@@ -2,20 +2,17 @@
 // Establishing connection with server
 var socket = io.connect();
 
-// Changes the led state
-function changeState(state){
-    if (state==1){
-        // Emit message changing the state to 1
-        socket.emit('changeState', '{"state":1}');
-        // Change led status on web page to ON
-        document.getElementById("outputStatus").innerHTML = "Status: ON";
-    }
-    else if (state==0){
-        // Emit message changing the state to 0
-        socket.emit('changeState', '{"state":0}');
-        // Change led status on web page to OFF
-        document.getElementById("outputStatus").innerHTML = "Status: OFF";
-    }
+// guess what
+function addThermometer(){
+    // TODO: validate the input
+    var json = '{';
+    json +=  '"pin": "' + document.getElementById("pin").value;
+    json +=  '", "r_0": "' + document.getElementById("r-zero").value;
+    json +=  '", "t_0": "' + document.getElementById("t-zero").value;
+    json +=  '", "b": "' + document.getElementById("b-value").value;
+    json +=  '", "r_ref": "' + document.getElementById("r-ref").value;
+    json += '"}';
+    socket.emit('addThermometer', json);
 }
 
 socket.on('temperatures', function(temperatures) {

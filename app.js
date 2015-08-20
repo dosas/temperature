@@ -39,13 +39,25 @@ Thermometer.prototype = {
     }
 }
 
-// just add new thermometers below (TODO: add these via webinterface)
+// TODO be able to remove them
+function handleAddThermometer(data) {
+    var values = JSON.parse(data);   
+    console.log("pin: " + values.pin);
+    console.log("t_0: " + values.t_0);
+    console.log("r_0: " + values.r_0);
+    console.log("b: " + values.b);
+    console.log("r_ref: " + values.r_ref);
+    thermometers.push(new Thermometer(values.pin, parseInt(values.t_0), parseInt(values.b), parseInt(values.r_0), parseInt(values.r_ref)));
+}
+
+// just add new thermometers below
 var thermometers = [];
 thermometers.push(new Thermometer('P9_40', 298, 4092, 100000, 100000));
 
 io.on('connection', function (socket) {
 
-    setInterval(function () {	
+    setInterval(function () {
+	console.log(thermometers.length)
 	var temperatures = [];
 	for (var t = 0; t < thermometers.length; ++t) {
             temperatures.push({'id' : thermometers[t].pin, 'temperature': thermometers[t].temperature()});
@@ -54,7 +66,7 @@ io.on('connection', function (socket) {
         io.emit('temperatures', temperatures);
     }, 1000);
 
-    socket.on('changeState', handleChangeState);
+    socket.on('addThermometer', handleAddThermometer);
 
 });
 
@@ -62,8 +74,5 @@ http.listen(8888, function(){
     console.log('listening on *:8888');
 });
 
-function handleChangeState(data) {
-    var newData = JSON.parse(data);
-    console.log("Status: " + newData.state);
-}
+
 

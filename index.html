@@ -28,10 +28,53 @@
 
   <div>
 
+    <h2>Add Thermometer</h2>
+
+    <table id="form">
+     <tr>
+       <td>Pin</td> 
+       <td>
+	 <input id="pin" type="text" name="pin" value="P9_40">
+       </td>
+     </tr>
+     <tr>
+       <td>T_0 (K)</td>
+       <td>
+	 <input id="t-zero" type="text" name="pin" value="298">
+       </td>
+     </tr>
+     <tr>
+       <td>R_0 (Ohm)</td> 
+       <td>
+	 <input id="r-zero" type="text" name="pin" value="100000">
+       </td>
+     </tr>
+     <tr>
+       <td>B</td>
+       <td>
+	 <input id="b-value" type="text" name="pin" value="4000">
+       </td>
+     </tr>
+     <tr>
+       <td>R_ref (Ohm)</td>
+       <td>
+	 <input id="r-ref" type="text" name="pin" value="100000">
+       </td>
+     </tr>
+     <tr>
+       <td></td>
+       <td>
+	 <input type="submit" value="Add" onclick="addThermometer()">
+       </td>
+     </tr>
+     </table>
+
+    <!--
     <h2>Switch (I do nothing!)</h2>
     <p id="outputStatus">Status</p>
     <button class="switch" type="button" onclick="changeState(1);">ON</button>
     <button class="switch" type="button" onclick="changeState(0);">OFF</button>
+    -->
 
   </div>
 
