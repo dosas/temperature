@@ -49,14 +49,14 @@ socket.on('temperatures', function(temperatures) {
 	if (document.getElementById(temperatures[t].id)){
 	    var tr = document.getElementById(temperatures[t].id);
 	    var tds = tr.childNodes;
-            tds[0].a.innerHTML = temperatures[t].name
+            tds[0].childNodes[0].innerHTML = temperatures[t].name + " (" + temperatures[t].id + ")"
             tds[1].innerHTML = temperatures[t].temperature
         } else {
             var tr = document.createElement('TR');
-	    tr.setAttribute("id", temperatures[t].id);				
+	    tr.setAttribute("id", temperatures[t].id);
 
 	    var a = document.createElement('a');
-	    a.appendChild(document.createTextNode(temperatures[t].name))
+	    a.appendChild(document.createTextNode(temperatures[t].name + " (" + temperatures[t].id + ")"))
 	    a.href = "/"
 
             var td = document.createElement('TD');
