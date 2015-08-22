@@ -2,9 +2,27 @@
 // Establishing connection with server
 var socket = io.connect();
 
+function validatePin(pin){
+    var pins = ['P9_33', 'P9_35', 'P9_36', 'P9_37', 'P9_38', 'P9_39', 'P9_40']
+    var valid = false;
+    for (p=0; p < pins.length; p++){
+	if (pin == pins[p]){
+	    valid = true;
+	}
+    }
+
+    if (!valid){
+	alert(pin + " is not a valid AIN pin!");
+    }
+
+    return valid;
+}
+
 // guess what
 function addThermometer(){
-    // TODO: validate the input
+    if (!validatePin(document.getElementById("pin").value)){
+	return;
+    }
     var json = '{';
     json +=  '"pin": "' + document.getElementById("pin").value;
     json +=  '", "name": "' + document.getElementById("name").value;
@@ -17,6 +35,7 @@ function addThermometer(){
 }
 
 function addDefaultThermometer(name, pin, r_0, t_0, b, r_ref){
+    validatePin(document.getElementById("pin").value);
     var json = '{';
     json +=  '"pin": "' + pin;
     json +=  '", "name": "' + name;
