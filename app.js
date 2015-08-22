@@ -7,6 +7,8 @@ app.get('/', function(req, res){
     res.sendFile(__dirname + '/index.html');
 });
 
+//app.set('/modify', __dirname + '/modify.html');
+
 var u_tot = 3.3;
 var u_ref = 1.8;
 

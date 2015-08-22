@@ -16,6 +16,24 @@ function addThermometer(){
     socket.emit('addThermometer', json);
 }
 
+function addDefaultThermometer(name, pin, r_0, t_0, b, r_ref){
+    var json = '{';
+    json +=  '"pin": "' + pin;
+    json +=  '", "name": "' + name;
+    json +=  '", "r_0": "' + r_0;
+    json +=  '", "t_0": "' + t_0;
+    json +=  '", "b": "' + b;
+    json +=  '", "r_ref": "' + r_ref;
+    json += '"}';
+    socket.emit('addThermometer', json);
+}
+
+function modifyThermometer(){
+    document.getElementById("modify").onclick = function () {
+        location.href = "/";
+    };
+}
+
 function removeThermometer(id){
     socket.emit('removeThermometer', '{"id": "'+ id + '"}');
     // not pretty but works should be done via callback
@@ -31,14 +49,18 @@ socket.on('temperatures', function(temperatures) {
 	if (document.getElementById(temperatures[t].id)){
 	    var tr = document.getElementById(temperatures[t].id);
 	    var tds = tr.childNodes;
-            tds[0].innerHTML = temperatures[t].name
+            tds[0].a.innerHTML = temperatures[t].name
             tds[1].innerHTML = temperatures[t].temperature
         } else {
             var tr = document.createElement('TR');
 	    tr.setAttribute("id", temperatures[t].id);				
 
+	    var a = document.createElement('a');
+	    a.appendChild(document.createTextNode(temperatures[t].name))
+	    a.href = "/"
+
             var td = document.createElement('TD');
-            td.appendChild(document.createTextNode(temperatures[t].name));
+            td.appendChild(a);
             tr.appendChild(td);
 	    
             var td = document.createElement('TD');

@@ -17,78 +17,93 @@
 
   <body>
 
-  <div>
-    
-    <h2>Temperature</h2>
-    
-    <table id="table-temperature">
-      <tr>
-	<th>ID</th>
-	<th>Temperature</th>
-      </tr>
-    </table>
+    <div>
+      
+      <div>
 
-  </div>
+	<h2>Temperature</h2>
+	
+	<table id="table-temperature">
+	  <tr>
+	    <th>ID</th>
+	    <th>Temperature</th>
+	  </tr>
+	</table>
+	
+      </div>
 
-  <div>
+      <div>
+	
+	<h2>Add Thermometer</h2>
 
-    <h2>Add Thermometer</h2>
+	<div>
 
-    <table id="form">
-     <tr>
-       <td>Name</td> 
-       <td>
-	 <input id="name" type="text" name="name" value="default" maxlength="20" size="12">
-       </td>
-     </tr>
-     <tr>
-       <td>Pin</td> 
-       <td>
-	 <input id="pin" type="text" name="pin" value="P9_40" maxlength="5" size="12">
-       </td>
-     </tr>
-     <tr>
-       <td>T_0 (K)</td>
-       <td>
-	 <input id="t-zero" type="text" name="pin" value="298" maxlength="3" size="12">
-       </td>
-     </tr>
-     <tr>
-       <td>R_0 (Ohm)</td> 
-       <td>
-	 <input id="r-zero" type="text" name="pin" value="100000" maxlength="10" size="12">
-       </td>
-     </tr>
-     <tr>
-       <td>B (K)</td>
-       <td>
-	 <input id="b-value" type="text" name="pin" value="4000" maxlength="10" size="12">
-       </td>
-     </tr>
-     <tr>
-       <td>R_ref (Ohm)</td>
-       <td>
-	 <input id="r-ref" type="text" name="pin" value="100000" maxlength="10" size="12">
-       </td>
-     </tr>
-     <tr>
-       <td></td>
-       <td>
-	 <input type="submit" value="Add" onclick="addThermometer()">
-       </td>
-     </tr>
-     </table>
+	  <h4>Default</h4>
 
-    <!--
-    <h2>Switch (I do nothing!)</h2>
-    <p id="outputStatus">Status</p>
-    <button class="switch" type="button" onclick="changeState(1);">ON</button>
-    <button class="switch" type="button" onclick="changeState(0);">OFF</button>
-    -->
+	  <ul>
+	    <li>
+	      <button class="add-default" type="button" onclick="addDefaultThermometer('Maverick ET-732', 'P9_39', '1000000', '289', '4780', '1000000');">Maverick ET-732</button>
+	    </li>
+	  </ul>
 
-  </div>
+	</div>
+	
+	<div>
 
-</body>
+	  <h4>Custom</h4>
+
+	  <table id="form">
+	    <tr>
+	      <td>Name</td> 
+	      <td>
+		<input id="name" type="text" name="name" value="default" maxlength="20" size="12">
+	      </td>
+	    </tr>
+	    <tr>
+	      <td>Pin</td> 
+	      <td>
+		<input id="pin" type="text" name="pin" value="P9_40" maxlength="5" size="12">
+	      </td>
+	    </tr>
+	    <tr>
+	      <td>T<sub>0</sub> (K)</td>
+	      <td>
+		<input id="t-zero" type="text" name="pin" value="298" maxlength="3" size="12">
+	      </td>
+	    </tr>
+	    <tr>
+	      <td>R<sub>0</sub> (Ω)</td> 
+	      <td>
+		<input id="r-zero" type="text" name="pin" value="100000" maxlength="10" size="12">
+	      </td>
+	    </tr>
+	    <tr>
+	      <td>B (K)</td>
+	      <td>
+		<input id="b-value" type="text" name="pin" value="4000" maxlength="10" size="12">
+	      </td>
+	    </tr>
+	    <tr>
+	      <td>R<sub>ref</sub> (Ω)</td>
+	      <td>
+		<input id="r-ref" type="text" name="pin" value="100000" maxlength="10" size="12">
+	      </td>
+	    </tr>
+	    <tr>
+	      <td></td>
+	      <td>
+		<input type="submit" value="Add" onclick="addThermometer()">
+	      </td>
+	    </tr>
+	  </table>
+
+	</div>
+
+      </div>
+
+    </div>
+
+  </body>
 
 </html>
 
