@@ -47,17 +47,52 @@ function addDefaultThermometer(name, pin, r_0, t_0, b, r_ref){
     socket.emit('addThermometer', json);
 }
 
-function modifyThermometer(){
-    document.getElementById("modify").onclick = function () {
-        location.href = "/";
-    };
-}
-
 function removeThermometer(id){
     socket.emit('removeThermometer', '{"id": "'+ id + '"}');
     // not pretty but works should be done via callback
     document.getElementById(id).remove();    
 }
+
+function modifyThermometer(){
+    if (!validatePin(document.getElementById("pin").value)){
+	return;
+    }
+
+    var json = '{';
+    json +=  '"pin": "' + document.getElementById("pin-mod").value;
+    json +=  '", "name": "' + document.getElementById("name-mod").value;
+    json +=  '", "r_0": "' + document.getElementById("r-zero-mod").value;
+    json +=  '", "t_0": "' + document.getElementById("t-zero-mod").value;
+    json +=  '", "b": "' + document.getElementById("b-value-mod").value;
+    json +=  '", "r_ref": "' + document.getElementById("r-ref-mod").value;
+    json += '"}';
+    socket.emit('modifyThermometer', json);
+
+    // needs two clicks
+    document.getElementById("modify-button").onclick = function () {
+        location.href = "/";
+    };
+
+}
+
+function cancelModify() { 
+    document.getElementById("modify").style.display = "none";
+    document.getElementById("cancel-button").onclick = function () {
+        location.href = "/";
+    };
+}
+
+function displayModify(name, pin, t_0, r_0, b, r_ref) { 
+    document.getElementById("modify").style.display = "block";
+
+    document.getElementById("name-mod").setAttribute("value", name); 
+    document.getElementById("pin-mod").setAttribute("value", pin);
+    document.getElementById("t-zero-mod").setAttribute("value", t_0);
+    document.getElementById("r-zero-mod").setAttribute("value", r_0);
+    document.getElementById("b-value-mod").setAttribute("value", b);
+    document.getElementById("r-ref-mod").setAttribute("value", r_ref);
+}
+
 
 socket.on('temperatures', function(temperatures) {
 
@@ -76,7 +111,9 @@ socket.on('temperatures', function(temperatures) {
 
 	    var a = document.createElement('a');
 	    a.appendChild(document.createTextNode(temperatures[t].name + " (" + temperatures[t].id + ")"))
-	    a.href = "/"
+
+	    a.href = "#";
+	    a.setAttribute("onclick", "displayModify('" + temperatures[t].name + "', '" + temperatures[t].id + "', '" + temperatures[t].t + "', '" + temperatures[t].r + "', '" + temperatures[t].b + "', '" + temperatures[t].ref + "')");
 
             var td = document.createElement('TD');
             td.appendChild(a);

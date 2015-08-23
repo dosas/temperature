@@ -3,11 +3,14 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var b = require('bonescript');
 
+// if it is befor / it works, i do not udnerstand why
+app.get('/modify', function(req, res){
+    res.sendFile(__dirname + '/modify.html');
+});
+
 app.get('/', function(req, res){
     res.sendFile(__dirname + '/index.html');
 });
-
-//app.set('/modify', __dirname + '/modify.html');
 
 var u_tot = 3.3;
 var u_ref = 1.8;
@@ -43,6 +46,7 @@ Thermometer.prototype = {
 }
 
 function handleAddThermometer(data) {
+    console.log("ADD");
     var values = JSON.parse(data);   
     console.log("name: " + values.name);
     console.log("pin: " + values.pin);
@@ -53,30 +57,59 @@ function handleAddThermometer(data) {
     thermometers.push(new Thermometer(values.name, values.pin, parseInt(values.t_0), parseInt(values.b), parseInt(values.r_0), parseInt(values.r_ref)));
 }
 
-function handleRemoveThermometer(data) {
+function handleModifyThermometer(data) {
+    console.log("MODIFY");
     var values = JSON.parse(data);   
+    console.log("name: " + values.name);
+    console.log("pin: " + values.pin);
+    console.log("t_0: " + values.t_0);
+    console.log("r_0: " + values.r_0);
+    console.log("b: " + values.b);
+    console.log("r_ref: " + values.r_ref);
+
     var index;
-    for (var t = 0; t < thermometers.length; ++t) {
+    for (var t = 0; t < thermometers.length; t++) {
+	if (thermometers[t].pin == values.pin){
+	    index = t;
+	}
+    }
+    if (index) {	
+	console.log("index: " + index);
+	thermometers[index].name = values.name;
+	thermometers[index].t_0 = values.t_0;
+	thermometers[index].r_0 = values.r_0;
+	thermometers[index].b = values.b;
+	thermometers[index].r_ref = values.r_ref;
+    }
+}
+
+function handleRemoveThermometer(data) {
+    console.log("REMOVE");
+    var values = JSON.parse(data);   
+    console.log("id: " + values.id);
+    var index;
+    for (var t = 0; t < thermometers.length; t++) {
+	console.log("pins: " + thermometers[t].pin);
 	if (thermometers[t].pin == values.id){
 	    index = t;
 	}
     }
     if (index) {
+	console.log("index: " + index);
 	thermometers.splice(index, 1);
     }
 }
 
-// just add new thermometers below
 var thermometers = [];
-thermometers.push(new Thermometer('default', 'P9_40', 298, 4092, 100000, 100000));
+//thermometers.push(new Thermometer('default', 'P9_40', 298, 4092, 100000, 100000));
 
 io.on('connection', function (socket) {
 
     setInterval(function () {
 	console.log(thermometers.length)
 	var temperatures = [];
-	for (var t = 0; t < thermometers.length; ++t) {
-            temperatures.push({'id' : thermometers[t].pin, 'temperature': thermometers[t].temperature(), 'name': thermometers[t].name});
+	for (var t = 0; t < thermometers.length; t++) {
+            temperatures.push({'id' : thermometers[t].pin, 'temperature': thermometers[t].temperature(), 'name': thermometers[t].name, 't': thermometers[t].t_0, 'r': thermometers[t].r_0, 'b': thermometers[t].b, 'ref': thermometers[t].r_ref});
 	    //console.log(thermometers[t].pin + ": " + thermometers[t].temperature());
 	}
         io.emit('temperatures', temperatures);
@@ -84,6 +117,7 @@ io.on('connection', function (socket) {
 
     socket.on('addThermometer', handleAddThermometer);
     socket.on('removeThermometer', handleRemoveThermometer);
+    socket.on('modifyThermometer', handleModifyThermometer);
 
 });
 
