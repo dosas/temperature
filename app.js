@@ -3,6 +3,8 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var b = require('bonescript');
 
+var debug = false;
+
 // if it is befor / it works, i do not udnerstand why
 app.get('/modify', function(req, res){
     res.sendFile(__dirname + '/modify.html');
@@ -18,24 +20,37 @@ var u_ref = 1.8;
 function Thermometer (name, pin, t_0, r_0, b, r_ref) {
     this.name = name
     this.pin = pin;
-    this.t_0 = t_0;
-    this.r_0 = r_0;
-    this.b = b;
-    this.r_ref = r_ref;
+    this.t_0 = parseFloat(t_0);
+    this.r_0 = parseFloat(r_0);
+    this.b = parseFloat(b);
+    this.r_ref = parseFloat(r_ref);
 }
 
 Thermometer.prototype = {
     constructor: Thermometer,
     calc_voltage:function () {
-	return b.analogRead(this.pin) * u_ref;
+	reading = b.analogRead(this.pin);
+	voltage = reading * u_ref;
+	if (debug){
+	    console.log("AIN: " + reading);
+	    console.log("voltage: " + voltage);
+	}
+	return voltage;
     },
     calc_resistance:function (u) {
-	r = this.r_ref / (u_tot / u - 1);
-	return r;
+	resistance = this.r_ref / (u_tot / u - 1);
+	if (debug){
+	    console.log("resistance: " + resistance);
+	}
+	return resistance;
     },
     calc_temperature:function (r) {
-	t = 1. / (1./this.t_0 + 1./this.b * Math.log(r/this.r_0));
-	return t - 272;
+	temperature = 1. / parseFloat(1. / this.t_0 + 1. / this.b * Math.log(r / this.r_0));
+	temperature -= 272;
+	if (debug){
+	    console.log("temperature: " + temperature);
+	}
+	return temperature
     },
     temperature:function () {
 	u = this.calc_voltage();
@@ -54,7 +69,7 @@ function handleAddThermometer(data) {
     console.log("r_0: " + values.r_0);
     console.log("b: " + values.b);
     console.log("r_ref: " + values.r_ref);
-    thermometers.push(new Thermometer(values.name, values.pin, parseInt(values.t_0), parseInt(values.b), parseInt(values.r_0), parseInt(values.r_ref)));
+    thermometers.push(new Thermometer(values.name, values.pin, parseInt(values.t_0), parseInt(values.r_0), parseInt(values.b), parseInt(values.r_ref)));
 }
 
 function handleModifyThermometer(data) {
@@ -106,11 +121,15 @@ var thermometers = [];
 io.on('connection', function (socket) {
 
     setInterval(function () {
-	console.log(thermometers.length)
+	if (debug){
+	    console.log(thermometers.length);
+	}
 	var temperatures = [];
 	for (var t = 0; t < thermometers.length; t++) {
             temperatures.push({'id' : thermometers[t].pin, 'temperature': thermometers[t].temperature(), 'name': thermometers[t].name, 't': thermometers[t].t_0, 'r': thermometers[t].r_0, 'b': thermometers[t].b, 'ref': thermometers[t].r_ref});
-	    //console.log(thermometers[t].pin + ": " + thermometers[t].temperature());
+	    if (debug){
+		console.log(thermometers[t].pin + ", t: " + thermometers[t].temperature() + ", t_0: " + thermometers[t].t_0 + ", b: " + thermometers[t].b + ", r_0: " + thermometers[t].r_0 + ", r_ref: " + thermometers[t].r_ref);
+	    }
 	}
         io.emit('temperatures', temperatures);
     }, 1000);
